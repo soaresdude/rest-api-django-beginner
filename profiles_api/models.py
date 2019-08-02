@@ -2,14 +2,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
 
 
 class UserProfileManager(BaseUserManager):
-
     def create_user(self, email, name, password=None):
         """Create new user profile"""
         if not email:
-            raise ValueError('Empty email field.')
+            raise ValueError("Empty email field.")
 
         email = self.normalize_email(email)
         user = self.model(email=email, name=name)
@@ -41,8 +41,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     objects = UserProfileManager()
 
     # Overwrites default username field for authentication which is required by default
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["name"]
 
     def get_full_name(self):
         return self.name
@@ -52,3 +52,15 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class ProfileFeedItem(models.Model):
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.status_text
