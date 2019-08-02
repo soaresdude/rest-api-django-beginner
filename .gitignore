@@ -1,0 +1,10 @@
+# Python
+*__init__.py
+*__pycache__
+
+# IDEs
+.idea
+.vscode
+
+# DB
+db.sqlite3
